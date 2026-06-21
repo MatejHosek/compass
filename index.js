@@ -1,4 +1,5 @@
 var position = [0, 0];
+var userMarker;
 
 function geolocate() {
     var userMarker = new Object();
@@ -7,7 +8,7 @@ function geolocate() {
         position = [g.coords.latitude, g.coords.longitude];
         map.panTo(position)
 
-        userMarker['marker'] = L.marker(position, {
+        userMarker = L.marker(position, {
             icon: L.icon({
                 iconUrl: 'leaflet/images/marker-location.png',
 
@@ -15,7 +16,7 @@ function geolocate() {
                 iconAnchor:   [10, 10],
 
                 rotationOrigin: 'center',
-                // TODO: Marker rotation
+                rotationAngle: g.coords.heading,
             }),
             keyboard: false,
         }).addTo(map);
@@ -23,8 +24,8 @@ function geolocate() {
 
     navigator.geolocation.watchPosition(g => {
         position = [g.coords.latitude, g.coords.longitude];
+        userMarker.setRotationAngle(g.coords.heading);
         
-        // TODO: Marker rotation
         // TODO: Recalculate distance to Prague
     })
 }
