@@ -23,6 +23,46 @@ function calculate_distance(pos1, pos2) {
     return c * 6378;
 }
 
+/**
+ * Updates the on-screen distance indicator.
+ */
+function update_distance() {
+    const text = document.getElementById('text');
+    const gauge = document.getElementById('vzdalenost');
+    const indicator = document.getElementById('ukazatel');
+
+    texts = [
+        '🥶 MRÁZ! 🥶',
+        '💧 samá voda 💧',
+        '🌡️ otepluje se 🌡️',
+        '🥵 přihořívá... 🥵',
+        '🔥 HOŘÍ! 🔥',
+    ]
+
+    colors = [
+        '#433BFF', 
+        '#3B96FF',
+        '#EDDB8B',
+        '#FFAB3D',
+        '#FF9100',
+    ]
+
+    var message = 0;
+    if (distance < 5000) message = 1;
+    if (distance < 1500) message = 2;
+    if (distance < 150) message = 3;
+    
+    gauge.innerText = `Do Prahy zbývá ${Math.round(distance)} km`;
+
+    if (distance < 12) {
+        message = 4;
+        gauge.innerText = 'Jsi v Praze!';
+    }
+
+    text.innerHTML = texts[message];
+    indicator.style.backgroundColor = colors[message];
+}
+
 function geolocate() {
     var userMarker = new Object();
 
@@ -49,7 +89,7 @@ function geolocate() {
         userMarker.setRotationAngle(g.coords.heading);
         
         distance = calculate_distance(position, prague);
-        // TODO: Update distance alert
+        update_distance();
     })
 }
 
