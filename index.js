@@ -1,6 +1,28 @@
 var position = [0, 0];
 var userMarker;
 
+var prague = [50.0875, 14.421389];
+var distance;
+
+/**
+ * Calculate the great circle distance on Earth given their latitude-longitude coordinates.
+ * 
+ * @param {number[]} pos1 latitude and longitude of the first position
+ * @param {number[]} pos2 latitude and longitude of the second position
+ * 
+ * @returns {number} great circle distance
+ */
+function calculate_distance(pos1, pos2) {
+    // Use the spherical cosine rule
+    const a = (90 - pos1[0]) * Math.PI / 180;
+    const b = (90 - pos2[0]) * Math.PI / 180;
+    const C = (pos2[1] - pos1[1]) * Math.PI / 180;
+
+    const c = Math.acos(Math.cos(a)*Math.cos(b) + Math.sin(a)*Math.sin(b)*Math.cos(C));
+
+    return c * 6378;
+}
+
 function geolocate() {
     var userMarker = new Object();
 
@@ -26,7 +48,8 @@ function geolocate() {
         position = [g.coords.latitude, g.coords.longitude];
         userMarker.setRotationAngle(g.coords.heading);
         
-        // TODO: Recalculate distance to Prague
+        distance = calculate_distance(position, prague);
+        // TODO: Update distance alert
     })
 }
 
